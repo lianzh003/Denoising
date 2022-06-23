@@ -1,0 +1,34 @@
+<<<<<<< HEAD
+From email to Dr.Liu:
+
+Here is the link: https://github.com/baiti01/CodeBase.git
+ 
+I have provided two different versions: one uses the UNet architecture implemented by MONAI. Another is a customized lightweight UNet for efficiency consideration. Feel free to use any one of them.
+ 
+If you want to use the official version from MONAI, you can execute the script as: python main.py –cfg experiments\AAPMLowDose.yaml
+ 
+If you want to use the customized lightweight version, you can execute the script as: python main.py –cfg experiments\AAPMLowDose_LightWeight.yaml
+ 
+To adapt my code to your dataset, you need:
+1: write your data provider within the folder: lib/dataset (You can develop your script on top of my data provider script: lib/dataset/AAPMLowDose.py)
+2: you need to revise those parameters defined in experiments/AAPMLowDose.yaml, including WORKERS, DATASET, etc. since those are task-specific and machine-specific.
+3: you might also want to customize your network architecture if necessary.
+ 
+=======
+From email to Dr.Liu:
+
+Here is the link: https://github.com/baiti01/CodeBase.git
+ 
+I have provided two different versions: one uses the UNet architecture implemented by MONAI. Another is a customized lightweight UNet for efficiency consideration. Feel free to use any one of them.
+ 
+If you want to use the official version from MONAI, you can execute the script as: python main.py –cfg experiments\AAPMLowDose.yaml
+ 
+If you want to use the customized lightweight version, you can execute the script as: python main.py –cfg experiments\AAPMLowDose_LightWeight.yaml
+ 
+To adapt my code to your dataset, you need:
+1: write your data provider within the folder: lib/dataset (You can develop your script on top of my data provider script: lib/dataset/AAPMLowDose.py)
+2: you need to revise those parameters defined in experiments/AAPMLowDose.yaml, including WORKERS, DATASET, etc. since those are task-specific and machine-specific.
+3: you might also want to customize your network architecture if necessary.
+ 
+>>>>>>> e4c3c3d (code upload)
+I didn’t test the code with the MC dose denoising task since that project has been finished for a long time, and I have deleted the generated MC dose data to free some disk space. But I have tested the code with the AAPMLowDose denoising dataset. I believe it also works for your proton MC dose denoising task since both belong to the 3D image denoising task.

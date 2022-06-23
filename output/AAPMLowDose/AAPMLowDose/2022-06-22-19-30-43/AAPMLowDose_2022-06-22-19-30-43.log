@@ -1,0 +1,396 @@
+2022-06-22 19:30:43,770 AUTO_RESUME: True
+CRITERION:
+  DISCRIMINATOR_LOSS_TYPE: ce
+  EXTRA:
+    
+  PIXEL_WISE_LOSS_TYPE: mse
+CUDNN:
+  BENCHMARK: True
+  DETERMINISTIC: False
+  ENABLED: True
+DATASET:
+  DATA_AUGMENTATION_PROB: 0.0
+  NAME: AAPMLowDose
+  RESOLUTION: [1.0, 1.0, 1.0]
+  ROOT: C:\Users\M266563\Desktop\DoseDenoising\CodeBase
+  ROTATION_DEGREE_ANGLE_ZYX: [9, 0.0, 0.0]
+  SCALE_RANGE_ZYX: [0, 0.2, 0.2]
+  SHEAR_RANGE_ZYX: [0, 0, 0.1, 0.1, 0.1, 0.1]
+  TARGET_SIZE: [256, 256, 256]
+  TEST_LIST: test_dose.txt
+  TRAIN_LIST: train_dose.txt
+  TRANSLATION_RANGE_ZYX: [0, 32, 32]
+  VAL_LIST: val_dose.txt
+IS_VISUALIZE: True
+MODEL:
+  DISCRIMINATOR:
+    PRETRAINED: 
+  GENERATOR:
+    CHANNELS: (16, 32, 64, 128, 256)
+    DIMENSIONS: 3
+    INPUT_CHANNELS: 1
+    NAME: UNet_MONAI
+    NUM_RES_UNITS: 2
+    OUTPUT_CHANNELS: 1
+    PRETRAINED: 
+    STRIDES: (2, 2, 2, 2)
+  NAME: DensePredictionBaseLine
+OUTPUT_DIR: output
+PIN_MEMORY: True
+TEST:
+  BATCHSIZE_PER_GPU: 1
+  IS_VOLUME_VISUALIZER: True
+  MODEL_FILE: 
+  PRINT_FREQUENCY: 1.0
+  SHUFFLE: False
+TRAIN:
+  BATCHSIZE_PER_GPU: 1
+  CHECKPOINT: 
+  DISCRIMINATOR:
+    LR: 0.0003
+  DISPLAY_FREQUENCY: 5
+  GAMMA1: 0.9
+  GAMMA2: 0.999
+  GENERATOR:
+    LR: 0.0003
+  LR_FACTOR: 0.1
+  LR_POLICY: MultiStepLR
+  LR_STEP: (50000, 75000)
+  MOMENTUM: 0.9
+  NESTEROV: True
+  OPTIMIZER: adam
+  PRINT_FREQUENCY: 1.0
+  SAVE_EPOCH_FREQUENCY: 1
+  SHUFFLE: True
+  TOTAL_ITERATION: 100.0
+  WD: 0.0
+VAL:
+  BATCHSIZE_PER_GPU: 1
+  EVALUATION_FREQUENCY: 1000
+  MODEL_FILE: 
+  PRINT_FREQUENCY: 1.0
+  SHUFFLE: False
+WORKERS: 0
+2022-06-22 19:30:44,371 === generator ===
+2022-06-22 19:30:44,372 UNet(
+  (model): Sequential(
+    (0): ResidualUnit(
+      (conv): Sequential(
+        (unit0): Convolution(
+          (conv): Conv3d(1, 16, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+          (adn): ADN(
+            (N): InstanceNorm3d(16, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+            (D): Dropout(p=0.0, inplace=False)
+            (A): PReLU(num_parameters=1)
+          )
+        )
+        (unit1): Convolution(
+          (conv): Conv3d(16, 16, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+          (adn): ADN(
+            (N): InstanceNorm3d(16, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+            (D): Dropout(p=0.0, inplace=False)
+            (A): PReLU(num_parameters=1)
+          )
+        )
+      )
+      (residual): Conv3d(1, 16, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+    )
+    (1): SkipConnection(
+      (submodule): Sequential(
+        (0): ResidualUnit(
+          (conv): Sequential(
+            (unit0): Convolution(
+              (conv): Conv3d(16, 32, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+              (adn): ADN(
+                (N): InstanceNorm3d(32, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                (D): Dropout(p=0.0, inplace=False)
+                (A): PReLU(num_parameters=1)
+              )
+            )
+            (unit1): Convolution(
+              (conv): Conv3d(32, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+              (adn): ADN(
+                (N): InstanceNorm3d(32, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                (D): Dropout(p=0.0, inplace=False)
+                (A): PReLU(num_parameters=1)
+              )
+            )
+          )
+          (residual): Conv3d(16, 32, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+        )
+        (1): SkipConnection(
+          (submodule): Sequential(
+            (0): ResidualUnit(
+              (conv): Sequential(
+                (unit0): Convolution(
+                  (conv): Conv3d(32, 64, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+                  (adn): ADN(
+                    (N): InstanceNorm3d(64, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                    (D): Dropout(p=0.0, inplace=False)
+                    (A): PReLU(num_parameters=1)
+                  )
+                )
+                (unit1): Convolution(
+                  (conv): Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                  (adn): ADN(
+                    (N): InstanceNorm3d(64, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                    (D): Dropout(p=0.0, inplace=False)
+                    (A): PReLU(num_parameters=1)
+                  )
+                )
+              )
+              (residual): Conv3d(32, 64, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+            )
+            (1): SkipConnection(
+              (submodule): Sequential(
+                (0): ResidualUnit(
+                  (conv): Sequential(
+                    (unit0): Convolution(
+                      (conv): Conv3d(64, 128, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+                      (adn): ADN(
+                        (N): InstanceNorm3d(128, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                        (D): Dropout(p=0.0, inplace=False)
+                        (A): PReLU(num_parameters=1)
+                      )
+                    )
+                    (unit1): Convolution(
+                      (conv): Conv3d(128, 128, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                      (adn): ADN(
+                        (N): InstanceNorm3d(128, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                        (D): Dropout(p=0.0, inplace=False)
+                        (A): PReLU(num_parameters=1)
+                      )
+                    )
+                  )
+                  (residual): Conv3d(64, 128, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1))
+                )
+                (1): SkipConnection(
+                  (submodule): ResidualUnit(
+                    (conv): Sequential(
+                      (unit0): Convolution(
+                        (conv): Conv3d(128, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                        (adn): ADN(
+                          (N): InstanceNorm3d(256, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                          (D): Dropout(p=0.0, inplace=False)
+                          (A): PReLU(num_parameters=1)
+                        )
+                      )
+                      (unit1): Convolution(
+                        (conv): Conv3d(256, 256, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                        (adn): ADN(
+                          (N): InstanceNorm3d(256, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                          (D): Dropout(p=0.0, inplace=False)
+                          (A): PReLU(num_parameters=1)
+                        )
+                      )
+                    )
+                    (residual): Conv3d(128, 256, kernel_size=(1, 1, 1), stride=(1, 1, 1))
+                  )
+                )
+                (2): Sequential(
+                  (0): Convolution(
+                    (conv): ConvTranspose3d(384, 64, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1), output_padding=(1, 1, 1))
+                    (adn): ADN(
+                      (N): InstanceNorm3d(64, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                      (D): Dropout(p=0.0, inplace=False)
+                      (A): PReLU(num_parameters=1)
+                    )
+                  )
+                  (1): ResidualUnit(
+                    (conv): Sequential(
+                      (unit0): Convolution(
+                        (conv): Conv3d(64, 64, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                        (adn): ADN(
+                          (N): InstanceNorm3d(64, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                          (D): Dropout(p=0.0, inplace=False)
+                          (A): PReLU(num_parameters=1)
+                        )
+                      )
+                    )
+                    (residual): Identity()
+                  )
+                )
+              )
+            )
+            (2): Sequential(
+              (0): Convolution(
+                (conv): ConvTranspose3d(128, 32, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1), output_padding=(1, 1, 1))
+                (adn): ADN(
+                  (N): InstanceNorm3d(32, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                  (D): Dropout(p=0.0, inplace=False)
+                  (A): PReLU(num_parameters=1)
+                )
+              )
+              (1): ResidualUnit(
+                (conv): Sequential(
+                  (unit0): Convolution(
+                    (conv): Conv3d(32, 32, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                    (adn): ADN(
+                      (N): InstanceNorm3d(32, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                      (D): Dropout(p=0.0, inplace=False)
+                      (A): PReLU(num_parameters=1)
+                    )
+                  )
+                )
+                (residual): Identity()
+              )
+            )
+          )
+        )
+        (2): Sequential(
+          (0): Convolution(
+            (conv): ConvTranspose3d(64, 16, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1), output_padding=(1, 1, 1))
+            (adn): ADN(
+              (N): InstanceNorm3d(16, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+              (D): Dropout(p=0.0, inplace=False)
+              (A): PReLU(num_parameters=1)
+            )
+          )
+          (1): ResidualUnit(
+            (conv): Sequential(
+              (unit0): Convolution(
+                (conv): Conv3d(16, 16, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+                (adn): ADN(
+                  (N): InstanceNorm3d(16, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+                  (D): Dropout(p=0.0, inplace=False)
+                  (A): PReLU(num_parameters=1)
+                )
+              )
+            )
+            (residual): Identity()
+          )
+        )
+      )
+    )
+    (2): Sequential(
+      (0): Convolution(
+        (conv): ConvTranspose3d(32, 1, kernel_size=(3, 3, 3), stride=(2, 2, 2), padding=(1, 1, 1), output_padding=(1, 1, 1))
+        (adn): ADN(
+          (N): InstanceNorm3d(1, eps=1e-05, momentum=0.1, affine=False, track_running_stats=False)
+          (D): Dropout(p=0.0, inplace=False)
+          (A): PReLU(num_parameters=1)
+        )
+      )
+      (1): ResidualUnit(
+        (conv): Sequential(
+          (unit0): Convolution(
+            (conv): Conv3d(1, 1, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1))
+          )
+        )
+        (residual): Identity()
+      )
+    )
+  )
+)
+2022-06-22 19:30:44,374 Cannot find pretrained generator! Train from scratch!
+2022-06-22 19:30:44,375 Cannot find the state of the optimizer_generator! Record from beginning!
+2022-06-22 19:30:44,375 Cannot find pretrained discriminator! Train from scratch!
+2022-06-22 19:30:44,376 Cannot find the state of the optimizer_discriminator! Record from beginning!
+2022-06-22 19:30:44,376 Cannot find last iteration index! Train from iteration 0!
+2022-06-22 19:30:44,378 Cannot find visualize function: visualize_DensePredictionBaseLine! Using the default function!
+2022-06-22 19:30:44,394 {'current_performance': 100000000.0, 'best_performance': 100000000.0, 'is_best': False, 'current_iteration': 0, 'total_iteration': 100.0}
+2022-06-22 19:30:51,373 Val: [0/2]	Loss 0.76274 (0.76274)
+2022-06-22 19:30:56,466 Val: [1/2]	Loss 0.74949 (0.75612)
+2022-06-22 19:31:13,284 Iteration: [0/100]	Time 28.889s (28.889s)	Data 1.901s (1.901s)	LR: 0.000300	Loss 0.76160 (0.76160)
+2022-06-22 19:31:27,563 Iteration: [1/100]	Time 14.278s (21.584s)	Data 1.831s (1.866s)	LR: 0.000300	Loss 0.42524 (0.59342)
+2022-06-22 19:31:41,955 Iteration: [2/100]	Time 14.391s (19.186s)	Data 1.902s (1.878s)	LR: 0.000300	Loss 0.25067 (0.47917)
+2022-06-22 19:31:57,025 Iteration: [3/100]	Time 15.070s (18.157s)	Data 1.935s (1.892s)	LR: 0.000300	Loss 0.16928 (0.40170)
+2022-06-22 19:32:11,556 Iteration: [4/100]	Time 14.531s (17.432s)	Data 2.038s (1.921s)	LR: 0.000300	Loss 0.13376 (0.34811)
+2022-06-22 19:32:29,927 Iteration: [5/100]	Time 18.370s (17.588s)	Data 1.951s (1.926s)	LR: 0.000300	Loss 0.11351 (0.30901)
+2022-06-22 19:32:45,336 Iteration: [6/100]	Time 15.409s (17.277s)	Data 1.979s (1.934s)	LR: 0.000300	Loss 0.10248 (0.27951)
+2022-06-22 19:32:59,084 Iteration: [7/100]	Time 13.748s (16.836s)	Data 1.924s (1.933s)	LR: 0.000300	Loss 0.10074 (0.25716)
+2022-06-22 19:33:12,868 Iteration: [8/100]	Time 13.783s (16.497s)	Data 1.862s (1.925s)	LR: 0.000300	Loss 0.09446 (0.23908)
+2022-06-22 19:33:27,375 Iteration: [9/100]	Time 14.507s (16.298s)	Data 1.854s (1.918s)	LR: 0.000300	Loss 0.09485 (0.22466)
+2022-06-22 19:33:43,587 Iteration: [10/100]	Time 16.212s (16.290s)	Data 1.944s (1.920s)	LR: 0.000300	Loss 0.09462 (0.21284)
+2022-06-22 19:33:58,904 Iteration: [11/100]	Time 15.318s (16.209s)	Data 1.933s (1.921s)	LR: 0.000300	Loss 0.09342 (0.20289)
+2022-06-22 19:34:13,362 Iteration: [12/100]	Time 14.457s (16.074s)	Data 1.894s (1.919s)	LR: 0.000300	Loss 0.09138 (0.19431)
+2022-06-22 19:34:29,157 Iteration: [13/100]	Time 15.796s (16.054s)	Data 1.990s (1.924s)	LR: 0.000300	Loss 0.09117 (0.18694)
+2022-06-22 19:34:43,145 Iteration: [14/100]	Time 13.987s (15.916s)	Data 1.865s (1.920s)	LR: 0.000300	Loss 0.08653 (0.18025)
+2022-06-22 19:35:00,991 Iteration: [15/100]	Time 17.845s (16.037s)	Data 1.900s (1.919s)	LR: 0.000300	Loss 0.09185 (0.17472)
+2022-06-22 19:35:20,816 Iteration: [16/100]	Time 19.824s (16.260s)	Data 1.923s (1.919s)	LR: 0.000300	Loss 0.08787 (0.16961)
+2022-06-22 19:35:38,095 Iteration: [17/100]	Time 17.279s (16.316s)	Data 2.084s (1.928s)	LR: 0.000300	Loss 0.08677 (0.16501)
+2022-06-22 19:35:53,472 Iteration: [18/100]	Time 15.378s (16.267s)	Data 1.842s (1.924s)	LR: 0.000300	Loss 0.08513 (0.16081)
+2022-06-22 19:36:08,700 Iteration: [19/100]	Time 15.226s (16.215s)	Data 2.256s (1.940s)	LR: 0.000300	Loss 0.08460 (0.15700)
+2022-06-22 19:36:27,069 Iteration: [20/100]	Time 18.370s (16.318s)	Data 1.887s (1.938s)	LR: 0.000300	Loss 0.08058 (0.15336)
+2022-06-22 19:36:41,370 Iteration: [21/100]	Time 14.301s (16.226s)	Data 1.812s (1.932s)	LR: 0.000300	Loss 0.08062 (0.15005)
+2022-06-22 19:36:55,152 Iteration: [22/100]	Time 13.782s (16.120s)	Data 1.867s (1.929s)	LR: 0.000300	Loss 0.07862 (0.14695)
+2022-06-22 19:37:09,676 Iteration: [23/100]	Time 14.524s (16.053s)	Data 1.894s (1.928s)	LR: 0.000300	Loss 0.07776 (0.14406)
+2022-06-22 19:37:25,292 Iteration: [24/100]	Time 15.615s (16.036s)	Data 1.956s (1.929s)	LR: 0.000300	Loss 0.07688 (0.14138)
+2022-06-22 19:37:41,459 Iteration: [25/100]	Time 16.168s (16.041s)	Data 1.852s (1.926s)	LR: 0.000300	Loss 0.07696 (0.13890)
+2022-06-22 19:37:55,342 Iteration: [26/100]	Time 13.883s (15.961s)	Data 1.857s (1.923s)	LR: 0.000300	Loss 0.07523 (0.13654)
+2022-06-22 19:38:09,062 Iteration: [27/100]	Time 13.720s (15.881s)	Data 1.931s (1.924s)	LR: 0.000300	Loss 0.07909 (0.13449)
+2022-06-22 19:38:23,411 Iteration: [28/100]	Time 14.349s (15.828s)	Data 1.876s (1.922s)	LR: 0.000300	Loss 0.07380 (0.13240)
+2022-06-22 19:38:37,361 Iteration: [29/100]	Time 13.950s (15.765s)	Data 1.980s (1.924s)	LR: 0.000300	Loss 0.07545 (0.13050)
+2022-06-22 19:38:53,129 Iteration: [30/100]	Time 15.767s (15.765s)	Data 1.832s (1.921s)	LR: 0.000300	Loss 0.07317 (0.12865)
+2022-06-22 19:39:06,936 Iteration: [31/100]	Time 13.807s (15.704s)	Data 1.835s (1.918s)	LR: 0.000300	Loss 0.07166 (0.12687)
+2022-06-22 19:39:22,311 Iteration: [32/100]	Time 15.376s (15.694s)	Data 1.944s (1.919s)	LR: 0.000300	Loss 0.07506 (0.12530)
+2022-06-22 19:39:36,613 Iteration: [33/100]	Time 14.301s (15.653s)	Data 1.868s (1.918s)	LR: 0.000300	Loss 0.07095 (0.12370)
+2022-06-22 19:39:53,842 Iteration: [34/100]	Time 17.229s (15.698s)	Data 1.880s (1.916s)	LR: 0.000300	Loss 0.07134 (0.12220)
+2022-06-22 19:40:09,776 Iteration: [35/100]	Time 15.934s (15.705s)	Data 1.878s (1.915s)	LR: 0.000300	Loss 0.06877 (0.12072)
+2022-06-22 19:40:28,730 Iteration: [36/100]	Time 18.953s (15.793s)	Data 1.820s (1.913s)	LR: 0.000300	Loss 0.06874 (0.11931)
+2022-06-22 19:40:42,867 Iteration: [37/100]	Time 14.138s (15.749s)	Data 1.908s (1.913s)	LR: 0.000300	Loss 0.06901 (0.11799)
+2022-06-22 19:40:56,782 Iteration: [38/100]	Time 13.915s (15.702s)	Data 1.837s (1.911s)	LR: 0.000300	Loss 0.06722 (0.11669)
+2022-06-22 19:41:12,386 Iteration: [39/100]	Time 15.603s (15.700s)	Data 1.850s (1.909s)	LR: 0.000300	Loss 0.06648 (0.11543)
+2022-06-22 19:41:30,331 Iteration: [40/100]	Time 17.945s (15.754s)	Data 1.975s (1.911s)	LR: 0.000300	Loss 0.06705 (0.11425)
+2022-06-22 19:41:44,156 Iteration: [41/100]	Time 13.825s (15.708s)	Data 1.852s (1.909s)	LR: 0.000300	Loss 0.06595 (0.11310)
+2022-06-22 19:41:57,801 Iteration: [42/100]	Time 13.645s (15.660s)	Data 1.838s (1.908s)	LR: 0.000300	Loss 0.06438 (0.11197)
+2022-06-22 19:42:11,577 Iteration: [43/100]	Time 13.775s (15.618s)	Data 1.910s (1.908s)	LR: 0.000300	Loss 0.06309 (0.11086)
+2022-06-22 19:42:26,245 Iteration: [44/100]	Time 14.667s (15.596s)	Data 1.883s (1.907s)	LR: 0.000300	Loss 0.06385 (0.10981)
+2022-06-22 19:42:42,991 Iteration: [45/100]	Time 16.746s (15.621s)	Data 1.887s (1.907s)	LR: 0.000300	Loss 0.06235 (0.10878)
+2022-06-22 19:42:57,373 Iteration: [46/100]	Time 14.383s (15.595s)	Data 1.851s (1.906s)	LR: 0.000300	Loss 0.06165 (0.10778)
+2022-06-22 19:43:11,359 Iteration: [47/100]	Time 13.984s (15.562s)	Data 1.906s (1.906s)	LR: 0.000300	Loss 0.06038 (0.10679)
+2022-06-22 19:43:26,807 Iteration: [48/100]	Time 15.449s (15.559s)	Data 1.892s (1.905s)	LR: 0.000300	Loss 0.05967 (0.10583)
+2022-06-22 19:43:42,257 Iteration: [49/100]	Time 15.450s (15.557s)	Data 2.279s (1.913s)	LR: 0.000300	Loss 0.05897 (0.10489)
+2022-06-22 19:43:58,977 Iteration: [50/100]	Time 16.720s (15.580s)	Data 2.245s (1.919s)	LR: 0.000300	Loss 0.06136 (0.10404)
+2022-06-22 19:44:13,574 Iteration: [51/100]	Time 14.596s (15.561s)	Data 1.924s (1.919s)	LR: 0.000300	Loss 0.06059 (0.10320)
+2022-06-22 19:44:28,149 Iteration: [52/100]	Time 14.576s (15.542s)	Data 1.873s (1.919s)	LR: 0.000300	Loss 0.05807 (0.10235)
+2022-06-22 19:44:42,148 Iteration: [53/100]	Time 13.997s (15.514s)	Data 1.829s (1.917s)	LR: 0.000300	Loss 0.05732 (0.10152)
+2022-06-22 19:44:55,914 Iteration: [54/100]	Time 13.765s (15.482s)	Data 1.893s (1.916s)	LR: 0.000300	Loss 0.05819 (0.10073)
+2022-06-22 19:45:11,704 Iteration: [55/100]	Time 15.790s (15.487s)	Data 1.854s (1.915s)	LR: 0.000300	Loss 0.05517 (0.09992)
+2022-06-22 19:45:26,005 Iteration: [56/100]	Time 14.300s (15.467s)	Data 1.838s (1.914s)	LR: 0.000300	Loss 0.05437 (0.09912)
+2022-06-22 19:45:40,066 Iteration: [57/100]	Time 14.061s (15.442s)	Data 1.962s (1.915s)	LR: 0.000300	Loss 0.05362 (0.09833)
+2022-06-22 19:45:53,992 Iteration: [58/100]	Time 13.927s (15.417s)	Data 1.811s (1.913s)	LR: 0.000300	Loss 0.05293 (0.09756)
+2022-06-22 19:46:07,892 Iteration: [59/100]	Time 13.900s (15.391s)	Data 1.812s (1.911s)	LR: 0.000300	Loss 0.05218 (0.09681)
+2022-06-22 19:46:24,835 Iteration: [60/100]	Time 16.942s (15.417s)	Data 1.864s (1.911s)	LR: 0.000300	Loss 0.05120 (0.09606)
+2022-06-22 19:46:40,344 Iteration: [61/100]	Time 15.510s (15.418s)	Data 1.881s (1.910s)	LR: 0.000300	Loss 0.05125 (0.09534)
+2022-06-22 19:46:54,679 Iteration: [62/100]	Time 14.334s (15.401s)	Data 1.922s (1.910s)	LR: 0.000300	Loss 0.05169 (0.09464)
+2022-06-22 19:47:08,554 Iteration: [63/100]	Time 13.875s (15.377s)	Data 1.849s (1.909s)	LR: 0.000300	Loss 0.04950 (0.09394)
+2022-06-22 19:47:23,319 Iteration: [64/100]	Time 14.765s (15.368s)	Data 1.898s (1.909s)	LR: 0.000300	Loss 0.04884 (0.09324)
+2022-06-22 19:47:39,364 Iteration: [65/100]	Time 16.045s (15.378s)	Data 1.913s (1.909s)	LR: 0.000300	Loss 0.04831 (0.09256)
+2022-06-22 19:47:53,350 Iteration: [66/100]	Time 13.985s (15.357s)	Data 1.866s (1.909s)	LR: 0.000300	Loss 0.04777 (0.09190)
+2022-06-22 19:48:07,135 Iteration: [67/100]	Time 13.786s (15.334s)	Data 1.853s (1.908s)	LR: 0.000300	Loss 0.04730 (0.09124)
+2022-06-22 19:48:22,083 Iteration: [68/100]	Time 14.948s (15.329s)	Data 1.904s (1.908s)	LR: 0.000300	Loss 0.04812 (0.09061)
+2022-06-22 19:48:37,413 Iteration: [69/100]	Time 15.330s (15.329s)	Data 1.886s (1.907s)	LR: 0.000300	Loss 0.04621 (0.08998)
+2022-06-22 19:48:54,628 Iteration: [70/100]	Time 17.215s (15.355s)	Data 2.080s (1.910s)	LR: 0.000300	Loss 0.04644 (0.08937)
+2022-06-22 19:49:08,586 Iteration: [71/100]	Time 13.958s (15.336s)	Data 1.851s (1.909s)	LR: 0.000300	Loss 0.04561 (0.08876)
+2022-06-22 19:49:23,221 Iteration: [72/100]	Time 14.634s (15.326s)	Data 1.841s (1.908s)	LR: 0.000300	Loss 0.04511 (0.08816)
+2022-06-22 19:49:37,993 Iteration: [73/100]	Time 14.772s (15.319s)	Data 2.080s (1.910s)	LR: 0.000300	Loss 0.04491 (0.08758)
+2022-06-22 19:49:52,411 Iteration: [74/100]	Time 14.417s (15.307s)	Data 1.911s (1.910s)	LR: 0.000300	Loss 0.04365 (0.08699)
+2022-06-22 19:50:09,265 Iteration: [75/100]	Time 16.854s (15.327s)	Data 1.895s (1.910s)	LR: 0.000300	Loss 0.04315 (0.08641)
+2022-06-22 19:50:28,916 Iteration: [76/100]	Time 19.651s (15.383s)	Data 2.583s (1.919s)	LR: 0.000300	Loss 0.04408 (0.08586)
+2022-06-22 19:50:43,466 Iteration: [77/100]	Time 14.550s (15.373s)	Data 1.989s (1.920s)	LR: 0.000300	Loss 0.04359 (0.08532)
+2022-06-22 19:50:58,170 Iteration: [78/100]	Time 14.704s (15.364s)	Data 1.892s (1.919s)	LR: 0.000300	Loss 0.04181 (0.08477)
+2022-06-22 19:51:12,078 Iteration: [79/100]	Time 13.909s (15.346s)	Data 1.844s (1.919s)	LR: 0.000300	Loss 0.04135 (0.08423)
+2022-06-22 19:51:29,005 Iteration: [80/100]	Time 16.927s (15.365s)	Data 1.937s (1.919s)	LR: 0.000300	Loss 0.04215 (0.08371)
+2022-06-22 19:51:43,450 Iteration: [81/100]	Time 14.445s (15.354s)	Data 1.871s (1.918s)	LR: 0.000300	Loss 0.04079 (0.08319)
+2022-06-22 19:51:57,358 Iteration: [82/100]	Time 13.908s (15.337s)	Data 1.824s (1.917s)	LR: 0.000300	Loss 0.04002 (0.08267)
+2022-06-22 19:52:11,231 Iteration: [83/100]	Time 13.873s (15.319s)	Data 1.919s (1.917s)	LR: 0.000300	Loss 0.04014 (0.08216)
+2022-06-22 19:52:25,845 Iteration: [84/100]	Time 14.613s (15.311s)	Data 1.876s (1.917s)	LR: 0.000300	Loss 0.03906 (0.08165)
+2022-06-22 19:52:42,070 Iteration: [85/100]	Time 16.224s (15.322s)	Data 1.946s (1.917s)	LR: 0.000300	Loss 0.03976 (0.08117)
+2022-06-22 19:52:55,927 Iteration: [86/100]	Time 13.856s (15.305s)	Data 1.929s (1.917s)	LR: 0.000300	Loss 0.03870 (0.08068)
+2022-06-22 19:53:09,927 Iteration: [87/100]	Time 13.999s (15.290s)	Data 1.891s (1.917s)	LR: 0.000300	Loss 0.03762 (0.08019)
+2022-06-22 19:53:25,609 Iteration: [88/100]	Time 15.682s (15.294s)	Data 1.891s (1.916s)	LR: 0.000300	Loss 0.03711 (0.07970)
+2022-06-22 19:53:41,378 Iteration: [89/100]	Time 15.769s (15.300s)	Data 2.085s (1.918s)	LR: 0.000300	Loss 0.03667 (0.07923)
+2022-06-22 19:53:59,817 Iteration: [90/100]	Time 18.438s (15.334s)	Data 2.063s (1.920s)	LR: 0.000300	Loss 0.03616 (0.07875)
+2022-06-22 19:54:15,354 Iteration: [91/100]	Time 15.537s (15.336s)	Data 2.066s (1.922s)	LR: 0.000300	Loss 0.03560 (0.07828)
+2022-06-22 19:54:30,051 Iteration: [92/100]	Time 14.695s (15.329s)	Data 2.093s (1.923s)	LR: 0.000300	Loss 0.03499 (0.07782)
+2022-06-22 19:54:44,083 Iteration: [93/100]	Time 14.032s (15.316s)	Data 1.881s (1.923s)	LR: 0.000300	Loss 0.03455 (0.07736)
+2022-06-22 19:54:58,170 Iteration: [94/100]	Time 14.086s (15.303s)	Data 1.908s (1.923s)	LR: 0.000300	Loss 0.03516 (0.07691)
+2022-06-22 19:55:14,127 Iteration: [95/100]	Time 15.957s (15.310s)	Data 1.878s (1.922s)	LR: 0.000300	Loss 0.03350 (0.07646)
+2022-06-22 19:55:28,846 Iteration: [96/100]	Time 14.720s (15.303s)	Data 1.916s (1.922s)	LR: 0.000300	Loss 0.03326 (0.07602)
+2022-06-22 19:55:43,025 Iteration: [97/100]	Time 14.178s (15.292s)	Data 1.975s (1.923s)	LR: 0.000300	Loss 0.03271 (0.07557)
+2022-06-22 19:55:56,748 Iteration: [98/100]	Time 13.725s (15.276s)	Data 1.839s (1.922s)	LR: 0.000300	Loss 0.03187 (0.07513)
+2022-06-22 19:56:12,455 Iteration: [99/100]	Time 15.707s (15.280s)	Data 1.915s (1.922s)	LR: 0.000300	Loss 0.03133 (0.07469)
+2022-06-22 19:56:18,247 Val: [0/2]	Loss 0.03106 (0.03106)
+2022-06-22 19:56:24,208 Val: [1/2]	Loss 0.03091 (0.03098)
+2022-06-22 19:56:31,435 Val: [0/1]	Loss 0.03117 (0.03117)
